@@ -6,6 +6,7 @@
 <title>管理后台</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap');
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -150,6 +151,20 @@
   }
   .modal-content input:focus, .modal-content textarea:focus, .modal-content select:focus { border-color: var(--accent); }
   .modal-content textarea { resize: vertical; min-height: 100px; }
+  .ql-container { font-family: var(--font-serif) !important; font-size: 0.9rem !important; border-radius: 0 0 var(--radius-sm) var(--radius-sm) !important; }
+  .ql-toolbar { border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important; border-color: var(--border) !important; }
+  .ql-container { border-color: var(--border) !important; }
+  .ql-editor { min-height: 260px; line-height: 1.8; }
+  .ql-editor h2 { font-size: 1.2rem; margin: 1.5rem 0 0.5rem; font-weight: 600; }
+  .ql-editor h3 { font-size: 1rem; margin: 1.2rem 0 0.4rem; }
+  .ql-editor p { margin-bottom: 0.7rem; }
+  .ql-toolbar button:hover, .ql-toolbar .ql-active { color: var(--accent) !important; }
+  .ql-toolbar .ql-stroke { stroke: var(--muted) !important; }
+  .ql-toolbar button:hover .ql-stroke, .ql-toolbar .ql-active .ql-stroke { stroke: var(--accent) !important; }
+  .ql-toolbar .ql-fill { fill: var(--muted) !important; }
+  .ql-toolbar button:hover .ql-fill, .ql-toolbar .ql-active .ql-fill { fill: var(--accent) !important; }
+  .ql-toolbar .ql-picker { color: var(--muted) !important; }
+  .ql-toolbar .ql-picker:hover, .ql-toolbar .ql-picker-label:hover { color: var(--accent) !important; }
   .modal-content .btn-row { display: flex; gap: 0.8rem; margin-top: 1.5rem; justify-content: flex-end; }
   .modal-content .btn-cancel {
     padding: 0.6rem 1.5rem; border-radius: 50px;
@@ -215,10 +230,44 @@
   <div class="modal-content" id="editContent"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <script>
 const TOKEN_KEY = 'admin_token';
 let token = localStorage.getItem(TOKEN_KEY);
 let currentTab = 'reviews';
+let quillEditor = null;
+
+function initQuill(content) {
+  const el = document.getElementById('efContent');
+  if (quillEditor) {
+    quillEditor.root.innerHTML = content || '';
+    return;
+  }
+  quillEditor = new Quill('#efContent', {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        [{ header: [2, 3, false] }],
+        ['bold', 'italic'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['link', 'blockquote'],
+        ['clean']
+      ]
+    },
+    placeholder: '开始编辑内容...',
+  });
+  if (content) quillEditor.root.innerHTML = content;
+}
+
+function destroyQuill() {
+  if (quillEditor) {
+    quillEditor = null;
+  }
+}
+
+function getQuillContent() {
+  return quillEditor ? quillEditor.root.innerHTML : '';
+}
 
 function api(path, options = {}) {
   const headers = { ...(options.headers || {}) };
@@ -335,6 +384,7 @@ async function loadItems() {
 }
 
 async function openCreate() {
+  destroyQuill();
   if (currentTab === 'reviews') {
     document.getElementById('editContent').innerHTML = `
       <h2>新建影评</h2>
@@ -342,7 +392,7 @@ async function openCreate() {
       <label>标题</label><input type="text" id="efTitle">
       <label>作者</label><input type="text" id="efAuthor" value="匿名用户">
       <label>摘要</label><textarea id="efSummary" rows="2"></textarea>
-      <label>内容 (HTML)</label><textarea id="efContent" rows="8"></textarea>
+      <label>内容（可图文混排）</label><div id="efContent" style="height:320px"></div>
       <label>评分</label><input type="number" id="efRating" value="0" step="0.1" min="0" max="5">
       <div class="btn-row">
         <button class="btn-cancel" onclick="closeModal()">取消</button>
@@ -353,13 +403,14 @@ async function openCreate() {
       <h2>新建博客</h2>
       <label>标题</label><input type="text" id="efTitle">
       <label>摘要</label><textarea id="efSummary" rows="2"></textarea>
-      <label>内容 (HTML)</label><textarea id="efContent" rows="10"></textarea>
+      <label>内容（可图文混排）</label><div id="efContent" style="height:360px"></div>
       <label>标签 (逗号分隔)</label><input type="text" id="efTags">
       <div class="btn-row">
         <button class="btn-cancel" onclick="closeModal()">取消</button>
         <button class="btn-save" onclick="saveCreate()">保存</button>
       </div>`;
   }
+  initQuill('');
   document.getElementById('editModal').classList.add('show');
 }
 
@@ -368,6 +419,7 @@ async function openEdit(type, id) {
     const path = type === 'review' ? `/api/reviews/${id}` : `/api/blog/${id}`;
     const data = await apiJson(path);
     const item = data.review || data.post;
+    destroyQuill();
 
     if (type === 'review') {
       document.getElementById('editContent').innerHTML = `
@@ -376,7 +428,7 @@ async function openEdit(type, id) {
         <label>标题</label><input type="text" id="efTitle" value="${escHtml(item.title || '')}">
         <label>作者</label><input type="text" id="efAuthor" value="${escHtml(item.author || '')}">
         <label>摘要</label><textarea id="efSummary" rows="2">${escHtml(item.summary || '')}</textarea>
-        <label>内容 (HTML)</label><textarea id="efContent" rows="8">${escHtml(item.content || '')}</textarea>
+        <label>内容（可图文混排）</label><div id="efContent" style="height:320px"></div>
         <label>评分</label><input type="number" id="efRating" value="${item.rating || 0}" step="0.1" min="0" max="5">
         <div class="btn-row">
           <button class="btn-cancel" onclick="closeModal()">取消</button>
@@ -387,13 +439,14 @@ async function openEdit(type, id) {
         <h2>编辑博客 #${id}</h2>
         <label>标题</label><input type="text" id="efTitle" value="${escHtml(item.title || '')}">
         <label>摘要</label><textarea id="efSummary" rows="2">${escHtml(item.summary || '')}</textarea>
-        <label>内容 (HTML)</label><textarea id="efContent" rows="10">${escHtml(item.content || '')}</textarea>
+        <label>内容（可图文混排）</label><div id="efContent" style="height:360px"></div>
         <label>标签 (逗号分隔)</label><input type="text" id="efTags" value="${escHtml(item.tags || '')}">
         <div class="btn-row">
           <button class="btn-cancel" onclick="closeModal()">取消</button>
           <button class="btn-save" onclick="saveEdit('blog', ${id})">保存</button>
         </div>`;
     }
+    initQuill(item.content || '');
     document.getElementById('editModal').classList.add('show');
   } catch (e) { alert('加载失败'); }
 }
@@ -408,7 +461,7 @@ async function saveCreate() {
         title: document.getElementById('efTitle').value,
         author: document.getElementById('efAuthor').value || '匿名用户',
         summary: document.getElementById('efSummary').value,
-        content: document.getElementById('efContent').value,
+        content: getQuillContent(),
         rating: parseFloat(document.getElementById('efRating').value) || 0,
       };
       await apiJson('/api/admin/reviews', {
@@ -418,7 +471,7 @@ async function saveCreate() {
       const body = {
         title: document.getElementById('efTitle').value,
         summary: document.getElementById('efSummary').value,
-        content: document.getElementById('efContent').value,
+        content: getQuillContent(),
         tags: document.getElementById('efTags').value,
       };
       await apiJson('/api/admin/blog', {
@@ -439,7 +492,7 @@ async function saveEdit(type, id) {
         title: document.getElementById('efTitle').value,
         author: document.getElementById('efAuthor').value || '匿名用户',
         summary: document.getElementById('efSummary').value,
-        content: document.getElementById('efContent').value,
+        content: getQuillContent(),
         rating: parseFloat(document.getElementById('efRating').value) || 0,
       };
       await apiJson(`/api/admin/reviews/${id}`, {
@@ -449,7 +502,7 @@ async function saveEdit(type, id) {
       const body = {
         title: document.getElementById('efTitle').value,
         summary: document.getElementById('efSummary').value,
-        content: document.getElementById('efContent').value,
+        content: getQuillContent(),
         tags: document.getElementById('efTags').value,
       };
       await apiJson(`/api/admin/blog/${id}`, {
@@ -470,7 +523,7 @@ async function deleteItem(type, id) {
   } catch (e) { alert('删除失败'); }
 }
 
-function closeModal() { document.getElementById('editModal').classList.remove('show'); }
+function closeModal() { destroyQuill(); document.getElementById('editModal').classList.remove('show'); }
 
 document.getElementById('editModal').addEventListener('click', e => {
   if (e.target === document.getElementById('editModal')) closeModal();
