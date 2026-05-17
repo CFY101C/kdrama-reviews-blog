@@ -238,11 +238,9 @@ let currentTab = 'reviews';
 let quillEditor = null;
 
 function initQuill(content) {
-  const el = document.getElementById('efContent');
-  if (quillEditor) {
-    quillEditor.root.innerHTML = content || '';
-    return;
-  }
+  destroyQuill();
+  var el = document.getElementById('efContent');
+  if (!el) return;
   quillEditor = new Quill('#efContent', {
     theme: 'snow',
     modules: {
@@ -256,11 +254,17 @@ function initQuill(content) {
     },
     placeholder: '开始编辑内容...',
   });
-  if (content) quillEditor.root.innerHTML = content;
+  if (content) {
+    quillEditor.clipboard.dangerouslyPasteHTML(content);
+  }
 }
 
 function destroyQuill() {
   if (quillEditor) {
+    var toolbar = document.querySelector('.ql-toolbar');
+    if (toolbar) toolbar.remove();
+    var container = document.querySelector('.ql-container');
+    if (container) container.remove();
     quillEditor = null;
   }
 }
