@@ -79,6 +79,54 @@ def seed():
             "poster_url": "https://image.tmdb.org/t/p/w500/z1y3DMVXxGAqolnkOMfn7nNf3lY.jpg",
             "rating": 4.5,
         },
+        {
+            "title": "太阳的后裔",
+            "title_ko": "태양의 후예",
+            "year": 2016,
+            "episodes": 16,
+            "cast": "宋仲基、宋慧乔、晋久、金智媛",
+            "director": "李应福",
+            "writer": "金银淑、金元锡",
+            "genre": "爱情",
+            "poster_url": "https://image.tmdb.org/t/p/w500/7NUvR1ZtJynDKjWpX4Y6WNw3MxO.jpg",
+            "rating": 4.4,
+        },
+        {
+            "title": "海岸村恰恰恰",
+            "title_ko": "갯마을 차차차",
+            "year": 2021,
+            "episodes": 16,
+            "cast": "申敏儿、金宣虎、李相二",
+            "director": "刘济元",
+            "writer": "申夏恩",
+            "genre": "治愈",
+            "poster_url": "https://image.tmdb.org/t/p/w500/4pXHvxqUoGfLqVqRfXxwHVqhQ4K.jpg",
+            "rating": 4.5,
+        },
+        {
+            "title": "信号 Signal",
+            "title_ko": "시그널",
+            "year": 2016,
+            "episodes": 16,
+            "cast": "李帝勋、金惠秀、赵震雄",
+            "director": "金元锡",
+            "writer": "金银姬",
+            "genre": "悬疑",
+            "poster_url": "https://image.tmdb.org/t/p/w500/7rYkKjPNFhDxBB5xHfA5bF0DZqS.jpg",
+            "rating": 4.8,
+        },
+        {
+            "title": "我的出走日记",
+            "title_ko": "나의 해방일지",
+            "year": 2022,
+            "episodes": 16,
+            "cast": "李民基、金智媛、孙锡久、李伊",
+            "director": "金锡允",
+            "writer": "朴海英",
+            "genre": "治愈",
+            "poster_url": "https://image.tmdb.org/t/p/w500/8vQvYQqFwG5jQfXxGpYqN1wGzKp.jpg",
+            "rating": 4.6,
+        },
     ]
 
     drama_ids = {}
@@ -267,6 +315,121 @@ def seed():
             "rating": 4.5,
             "likes_count": 134,
         },
+        {
+            "drama_title": "太阳的后裔",
+            "author": "剧评人小陈",
+            "title": "战火中的爱情：一部现象级韩剧的诞生",
+            "summary": "宋仲基退伍后首部作品，与宋慧乔演绎军官与医生的战地恋情。当年风靡亚洲，创下韩剧收视神话。",
+            "content": """<p><strong>《太阳的后裔》</strong>是2016年无可争议的现象级韩剧。它不仅创造了韩剧在中国的版权费纪录，更让"双宋CP"从荧幕走向现实。</p>
+
+<h2>战地上的浪漫</h2>
+<p>柳时镇（宋仲基 饰）是特种部队的大尉，姜暮烟（宋慧乔 饰）是外科医生。两人在医院急诊室邂逅，一见钟情。然而军人和医生的身份注定了他们的爱情不会平凡——一个随时要执行危险任务，一个随时要抢救病人。</p>
+
+<p>这部剧最迷人的地方在于<strong>两个独立灵魂的平等对话</strong>。暮烟不是等待被拯救的公主，她是能在战地里完成手术的优秀医生。时镇也不是霸道总裁式的军官，他尊重暮烟的职业和选择。这种互相欣赏、互相尊重的感情，让人看得格外舒服。</p>
+
+<h2>乌鲁克的风景与人情</h2>
+<p>剧组远赴希腊取景，乌鲁克的海滨、沉船湾的碧蓝海水、扎金索斯的日落——这些画面美得像旅游宣传片。但更动人的是乌鲁克的地震救援戏——当灾难降临，军人和医生并肩作战的场景，让人看到了人性的光芒。</p>
+
+<p>救援队长徐大英（晋久 饰）和军医尹明珠（金智媛 饰）的副线也相当动人。大英因为父亲的遗命不敢接受明珠的感情，两人的拉扯比主线还虐。</p>
+
+<h2>为什么火</h2>
+<p>《太阳的后裔》的成功不是偶然。编剧金银淑把军旅和医疗两个高概念类型融合得天衣无缝，动作场面不输电影，感情线甜而不腻，配角个个有戏。更重要的是——<strong>它是一部"先拍后播"的电视剧</strong>，制作精良程度远超同期作品。</p>
+
+<p>OST同样功不可没，Gummy的《You Are My Everything》和CHEN&Punch的《Everytime》至今仍是韩剧OST的经典。</p>""",
+            "rating": 4.4,
+            "likes_count": 178,
+        },
+        {
+            "drama_title": "海岸村恰恰恰",
+            "author": "深夜追剧人",
+            "title": "在公辰的海风里，找到生活的答案",
+            "summary": "申敏儿和金宣虎的治愈系爱情喜剧。一个牙医来到海边小村，遇到了一位万能的洪班长。每一集都像吹着海风喝咖啡。",
+            "content": """<p><strong>《海岸村恰恰恰》</strong>是一部不需要快进的剧。它节奏舒缓但不拖沓，温暖但不甜腻，像海风吹过脸颊——轻柔惬意，让人全身心放松。</p>
+
+<h2>公辰的一切</h2>
+<p>尹惠珍（申敏儿 饰）是首尔的牙医，因为不肯妥协于医院的潜规则而辞职，偶然来到了海边的小村公辰。在这里，她遇到了洪斗植（金宣虎 饰）——一个没有正经职业却无所不能的男人。</p>
+
+<p>洪班长帮老奶奶腌泡菜、帮渔夫修补渔网、帮小朋友补习功课——他不是村长，但公辰的每一件事都离不开他。<strong>他的万能背后，藏着一个让人心碎的秘密。</strong></p>
+
+<h2>不只是爱情</h2>
+<p>公辰村里每个居民都有故事。离婚后独自开餐厅的统长、年轻时是歌手的超市阿姨、失去妻子的咖啡店老板——这部剧用大量的笔墨描绘了<strong>人与人之间最朴素的情感连接</strong>。邻里之间也许会吵架，但谁家有事，全村人都会来帮忙。</p>
+
+<p>这种人情味在大城市里早已消失了，但在公辰，它依然鲜活地存在着。</p>
+
+<h2>金宣虎的魅力</h2>
+<p>金宣虎演的洪斗植，是韩剧史上最让人心动的男主之一。他的笑容有治愈力，他的善良不刻意，他的脆弱让人心疼。当他面对惠珍时那种明显的喜欢却不敢靠近的克制——<strong>每一个细微的表情都是戏</strong>。</p>
+
+<p>申敏儿演的惠珍同样立体。她有点小傲娇、有点小物质，但在关键时刻总是选择善良。两个不完美的人，在海边的小村找到了彼此。</p>
+
+<h2>生活的答案</h2>
+<p>这部剧最打动我的是它对"成功"的重新定义。惠珍从首尔来到公辰，失去了一份体面的工作，却找到了一群真心相待的人。有时候我们拼命追求的东西，可能并不是幸福真正的来源。</p>
+
+<p><strong>如果觉得生活太累了，就来公辰吹吹海风吧。</strong></p>""",
+            "rating": 4.5,
+            "likes_count": 145,
+        },
+        {
+            "drama_title": "信号 Signal",
+            "author": "剧评人小陈",
+            "title": "一部对讲机连接过去与现在，改变未完成的正义",
+            "summary": "改编自真实悬案的犯罪神剧。金惠秀和李帝勋的演技教科书，编剧金银姬的巅峰之作，豆瓣9.2分。",
+            "content": """<p><strong>《信号》</strong>是我看过最完美的悬疑剧，没有之一。它不仅是一部犯罪剧，更是一部关于<strong>未完成的正义</strong>的深刻作品。</p>
+
+<h2>跨越时空的对讲机</h2>
+<p>刑警朴海英（李帝勋 饰）无意中找到了一部废弃的对讲机，对讲机那头是生活在2000年的刑警李材韩（赵震雄 饰）。两人通过电波跨越时空交流，联手侦破多起悬而未决的冷案。</p>
+
+<p>这个设定本身就充满了戏剧张力——<strong>如果你能告诉过去的人谁会死，你会怎么做？如果改变了过去，现在会发生什么？</strong></p>
+
+<h2>真实案件改编</h2>
+<p>《信号》里的案件几乎都改编自韩国真实的悬案：华城连环杀人案、密阳女中学生性侵案、首尔蚕院洞杀人案——这些案件的背后，是无数受害者和家属长达几十年的等待。</p>
+
+<p>编剧金银姬用剧集的方式提出了一个尖锐的问题：<strong>如果公权力从一开始就尽职尽责，这些悲剧是否可以避免？</strong>剧中的三位刑警，就是对抗这个不完美体制的力量。</p>
+
+<h2>三位刑警</h2>
+<p>李材韩是理想主义者的化身。他憨厚、固执、认死理，却拥有<strong>最纯粹的正义感</strong>。即使被上级打压、被同事排挤、被黑恶势力威胁，他从来没有忘记自己当警察的初心。</p>
+
+<p>车秀贤（金惠秀 饰）是韩国第一位女性重案组组长。她外表冷酷，内心柔软。她对李材韩长达十五年的等待——这才是全剧最虐的部分。</p>
+
+<p>朴海英是三人中最复杂的角色。他因为哥哥的冤案而憎恨警察，却在李材韩的影响下重新相信正义。<strong>他继承了李材韩的遗志，成为了那个永不放弃的人。</strong></p>
+
+<h2>为什么是神作</h2>
+<p>《信号》的剧本精密得无可挑剔。每一个案件都不是独立的——它们像拼图一样，最后拼出一个令人窒息的大图案。而结局更是开放式的神来之笔，让人既满足又意犹未尽。</p>
+
+<p>如果你只打算看一部韩剧悬疑，就选《信号》。<strong>五星推荐，毫不夸张。</strong></p>""",
+            "rating": 4.8,
+            "likes_count": 221,
+        },
+        {
+            "drama_title": "我的出走日记",
+            "author": "深夜追剧人",
+            "title": "你那看似普通的人生，其实每天都在创造奇迹",
+            "summary": "朴海英编剧继《我的大叔》后的又一治愈神作。三兄妹的平凡日常，金智媛和孙锡久的绝妙化学反应。",
+            "content": """<p><strong>《我的出走日记》</strong>是那种你看完之后很长一段时间都走不出来的剧。它不像传统韩剧那样有明确的主线剧情，更像是三兄妹的日常切片——每天往返三小时的通勤、乏味的职场、看不到尽头的生活。但正是这种平凡，让它的每一句台词都像在说你自己的故事。</p>
+
+<h2>三兄妹的困境</h2>
+<p>廉家三兄妹住在京畿道的乡下，每天要花三个小时往返首尔上班。他们没有惊人的才华，没有富裕的家庭，没有浪漫的爱情——<strong>他们就是你我他。</strong></p>
+
+<p>大姐廉琦贞（李伊 饰）是职场老油条，看似大大咧咧，实则对爱情极度渴望却总遇人不淑。二哥廉昌熙（李民基 饰）是便利店店员，话多心软，在物质与理想之间反复挣扎。小妹廉美贞（金智媛 饰）是公司里最不起眼的员工，内向、沉默、在人群中永远是透明的那个。但她却是全剧的灵魂人物。</p>
+
+<h2>崇拜我吧</h2>
+<p>美贞对隔壁住着的"具先生"（孙锡久 饰）说了一句话：<strong>"崇拜我吧，填满我的心。"</strong>——这可能是韩剧史上最奇怪的告白。</p>
+
+<p>具先生是一个神秘的酒鬼，整日不说话，眼神里全是疲惫。但他回应了美贞的请求——开始崇拜她。不送花、不说情话，只是每天在地铁站等她下班，陪她走回家的那段路。这种<strong>近乎宗教仪式般的互相救赎</strong>，比任何轰轰烈烈的爱情都更让人心动。</p>
+
+<h2>解放是什么</h2>
+<p>剧名叫"出走日记"，但三兄妹并没有真的去哪里旅行。他们的"出走"是内心的出走——<strong>从社会规训的牢笼中走出来，从自我否定的深渊中走出来。</strong></p>
+
+<p>昌熙决定辞职的那场戏，他对老板说："我要去做让自己开心的事。"这个决定在旁人看来很蠢，但当你每天都活在疲惫和厌倦中时，这种勇气值得被赞美。</p>
+
+<p>琦贞最终遇到了一个爱她的男人——不是因为对方有多好，而是因为她终于学会爱自己。</p>
+
+<h2>编剧的功力</h2>
+<p>朴海英编剧（《我的大叔》《又是吴海英》）写普通人的功力无人能及。她不需要狗血的剧情，一句台词就能让你泪流满面。比如美贞说的："<strong>我每天都在创造奇迹，因为我没有死掉。</strong>"</p>
+
+<p>《我的出走日记》不是适合所有人的剧。它慢、它平淡、它没有明确的"爽点"。但如果你正在经历人生的倦怠期，这部剧会像一只手，轻轻拍你的肩膀说：没关系，慢慢来。</p>""",
+            "rating": 4.6,
+            "likes_count": 156,
+        },
     ]
 
     for r in reviews:
@@ -290,6 +453,227 @@ def seed():
         conn.execute(
             "INSERT INTO comments (review_id, author, content) VALUES (?, ?, ?)",
             (row["id"], "韩剧迷小王", sample_comments[row["id"] % len(sample_comments)])
+        )
+
+    # Blog posts seed
+    blog_posts = [
+        {
+            "title": "Python FastAPI 后端开发实战",
+            "summary": "从零开始构建一个完整的 RESTful API 服务，涵盖路由、中间件、依赖注入和数据库集成。",
+            "content": """<p>FastAPI 是近年来增长最快的 Python Web 框架之一。它以<strong>高性能、易用性和自动API文档</strong>三大特性著称，非常适合构建现代化的后端服务。</p>
+
+<h2>为什么选择 FastAPI</h2>
+<p>传统 Python Web 框架如 Flask 和 Django 虽然成熟，但在异步支持和自动文档方面相对落后。FastAPI 基于 Starlette 和 Pydantic，天生支持异步处理，性能可以媲美 Node.js 和 Go 框架。</p>
+
+<p>它的另一个杀手锏是<strong>自动生成 OpenAPI 文档</strong>——你只需定义好路由和模型，FastAPI 就会自动生成 Swagger UI 和 ReDoc 文档。这极大地降低了前后端协作的成本。</p>
+
+<h2>核心概念</h2>
+<p><strong>路由与路径参数</strong>：使用装饰器定义 HTTP 方法和路径，支持类型化的路径参数和查询参数。FastAPI 会利用 Pydantic 的类型注解自动进行数据验证。</p>
+
+<p><strong>请求体模型</strong>：通过 Pydantic BaseModel 定义请求体的 schema，FastAPI 会自动解析、验证并转换为对应的 Python 对象。</p>
+
+<p><strong>依赖注入</strong>：FastAPI 的依赖注入系统非常灵活，可以用来管理数据库连接、认证中间件、配置等共享资源。</p>
+
+<h2>实际应用架构</h2>
+<p>一个典型的 FastAPI 项目通常会这样组织：</p>
+<pre><code>project/
+├── main.py          # 应用入口
+├── models.py        # Pydantic 模型
+├── database.py      # 数据库连接
+├── routers/         # 路由模块
+└── services/        # 业务逻辑</code></pre>
+<p>对于简单的项目，可以把所有东西放在几个文件中。但当项目规模增大时，<strong>按功能拆分路由</strong>会让代码更容易维护。</p>
+
+<h2>常见注意事项</h2>
+<p>1. <strong>CORS 配置</strong>：前端开发时需要配置 CORS 中间件允许跨域请求。</p>
+<p>2. <strong>数据库连接管理</strong>：不要在每个请求中新建连接，使用依赖注入来复用连接。</p>
+<p>3. <strong>错误处理</strong>：使用 HTTPException 统一处理错误，避免前端收到未格式化的错误信息。</p>
+<p>4. <strong>分页</strong>：列表接口一定要实现分页，避免一次性返回过多数据。</p>
+
+<p>FastAPI 的学习曲线温和，但它的能力远不止于此。WebSocket、后台任务、中间件——这些高级特性都能以极简洁的方式实现。</p>""",
+            "tags": "Python,FastAPI,后端",
+            "author": "陈飞扬",
+            "likes_count": 56,
+        },
+        {
+            "title": "React 状态管理：从 useState 到 Zustand",
+            "summary": "梳理 React 状态管理的演进路径，从基础 hooks 到轻量级全局状态方案，帮你做出最适合项目的选择。",
+            "content": """<p>React 的状态管理生态在过去几年发生了翻天覆地的变化。从 Redux 一家独大到如今百花齐放，开发者面临的选择前所未有地丰富——也前所未有地困惑。</p>
+
+<h2>useState 和 useReducer</h2>
+<p>对于<strong>局部 UI 状态</strong>（如表单输入、开关状态），useState 是最简单也最合适的选择。它没有额外的概念负担，代码一目了然。</p>
+
+<p>当状态逻辑变复杂（多个子值需要协调、状态更新依赖前一个状态），useReducer 提供了更结构化的方式。它的本质是把状态更新逻辑从组件中抽离到纯函数里——这使得测试变得极其容易。</p>
+
+<p>经验法则：<strong>能用 useState 解决的就不要用 useReducer，能用 useReducer 解决的就不要引入外部库。</strong></p>
+
+<h2>Context API</h2>
+<p>React 的 Context API 解决了 prop drilling 的问题，但它有几个容易被忽略的限制：</p>
+<p>1. Context 值的任何变化都会导致所有消费组件重新渲染，即使该组件只用了 Context 的一部分。</p>
+<p>2. 它不适合频繁变化的状态（如动画值、输入框值）。</p>
+<p>3. 多个 Context Provider 嵌套会让组件树变得难以阅读。</p>
+
+<p>Context 最适合<strong>低频变化的全局状态</strong>——如主题、语言、认证用户信息。</p>
+
+<h2>轻量级状态库</h2>
+<p><strong>Zustand</strong> 是目前最受欢迎的轻量级状态库。它的 API 极简——一个 create 函数就搞定一切，没有 Provider、没有 reducer 模板代码、不需要 action type 常量。</p>
+
+<p>最大的优势是：<strong>可以在 React 组件之外读写状态</strong>。这在处理 WebSocket 事件、计时器等场景下非常有用。</p>
+
+<p><strong>Jotai</strong> 采用了原子化的思路，每个状态片段是一个独立的 atom。它解决了 Context 的性能问题——只有真正使用了某个 atom 的组件才会在该 atom 变化时重新渲染。</p>
+
+<h2>服务端状态</h2>
+<p>一个容易忽视的事实是：大部分应用中的"状态"其实来自服务端。TanStack Query（原 React Query）和 SWR 专门处理这类场景——它们负责<strong>缓存、重新获取、乐观更新</strong>等所有与服务端数据相关的逻辑。</p>
+
+<p>推荐的做法：用 TanStack Query 管理服务端状态，用 Zustand 管理客户端状态。两者各司其职，互不干扰。</p>""",
+            "tags": "React,TypeScript,前端",
+            "author": "陈飞扬",
+            "likes_count": 72,
+        },
+        {
+            "title": "Rust 入门：所有权与借用",
+            "summary": "Rust 最核心的概念——所有权（Ownership）、借用（Borrowing）和生命周期（Lifetime），用最通俗的方式讲解。",
+            "content": """<p>如果你问 Rust 程序员这门语言最难学的是什么，十个人里有九个会说是<strong>所有权系统</strong>。但也正是这个系统，让 Rust 在不依赖垃圾回收器的情况下实现内存安全。</p>
+
+<h2>所有权的三条规则</h2>
+<p>1. Rust 中的每个值都有一个<strong>所有者</strong>（owner）。<br>
+2. 同一时间只能有<strong>一个</strong>所有者。<br>
+3. 当所有者离开作用域，值会被<strong>自动释放</strong>。</p>
+
+<p>这三条规则构成了 Rust 内存管理的基石。在 C/C++ 中你需要手动 malloc/free；在有 GC 的语言中，垃圾回收器帮你做但带来了性能开销。Rust 选择了第三条路：<strong>编译时通过所有权规则确定内存的释放时机。</strong></p>
+
+<h2>Move 语义</h2>
+<p>当你把一个变量赋值给另一个变量时，Rust 默认执行的是<strong>移动</strong>（move），而不是浅拷贝：</p>
+<pre><code>let s1 = String::from("hello");
+let s2 = s1;  // s1 的所有权移动到 s2
+// println!("{}", s1);  // 编译错误！s1 已失效</code></pre>
+<p>这个特性刚开始会让新人大吃一惊，但它避免了<strong>双重释放</strong>（double free）这个 C++ 中最令人头疼的内存 bug。</p>
+
+<h2>借用</h2>
+<p>如果每次传递数据都要转移所有权，代码写起来会很痛苦。于是 Rust 引入了<strong>借用</strong>——用引用来临时访问数据，而不获取所有权：</p>
+<pre><code>fn print_len(s: &String) {
+    println!("{}", s.len());
+}
+let s = String::from("hello");
+print_len(&s);  // 借出 s 的引用
+println!("{}", s);  // s 仍然可用</code></pre>
+<p>关键限制：<strong>同一时间，只能有一个可变引用或多个不可变引用</strong>。这条规则在编译时就杜绝了数据竞争（data race）的可能性。</p>
+
+<h2>生命周期</h2>
+<p>生命周期是借用检查器的"保险网"——它确保引用永远不会比它指向的值活得更久。大多数情况下 Rust 能自动推导生命周期，但当函数返回引用时，你可能需要手动标注。
+
+<h2>为什么值得学</h2>
+<p>所有权系统不是一个"可以跳过"的概念——它是 Rust 之所以存在的核心理由。当你真正理解了它，就会发现它其实很优雅：<strong>它把内存管理的规则从"约定"变成了"编译器验证的保证"。</strong></p>
+
+<p>一但你通过了借用检查器的考验，Rust 的世界将为之敞开。</p>""",
+            "tags": "Rust,内存管理,系统编程",
+            "author": "陈飞扬",
+            "likes_count": 43,
+        },
+        {
+            "title": "Docker 容器化实战：从 Dockerfile 到 Compose",
+            "summary": "掌握 Docker 核心概念和实践技巧，学会编写高效的 Dockerfile，使用 Docker Compose 编排多容器应用。",
+            "content": """<p>Docker 已经成为了现代软件开发的基础设施。不管你是前端、后端还是全栈工程师，<strong>至少需要能够阅读、编写和调试 Dockerfile</strong>。</p>
+
+<h2>镜像与容器</h2>
+<p><strong>镜像</strong>是一个只读的模板，包含了运行应用所需的文件系统。它是静态的、不可变的。<strong>容器</strong>是镜像的运行实例——它在镜像的基础上添加了一个可写层。</p>
+
+<p>理解这个区别很重要：你可以从一个镜像创建多个容器，每个容器之间互不影响。这就像类与对象的关系。</p>
+
+<h2>编写高效的 Dockerfile</h2>
+<p>一个好的 Dockerfile 核心原则：<strong>利用层的缓存机制，把变化频率最低的步骤放在最前面。</strong></p>
+
+<pre><code>FROM python:3.12-slim
+WORKDIR /app
+# 先复制依赖文件（变化频率低）
+COPY requirements.txt .
+# 安装依赖（这一步会被缓存）
+RUN pip install -r requirements.txt
+# 最后复制源代码（变化频率高）
+COPY . .
+CMD ["python", "main.py"]</code></pre>
+
+<p>上面的写法利用了 Docker 的层缓存——只要 requirements.txt 不变，pip install 就会直接从缓存读取，大大加快构建速度。如果反过来先 COPY . . 再 pip install，代码的每次修改都会导致依赖重新安装。</p>
+
+<h2>多阶段构建</h2>
+<p>对于需要编译的语言（如 Go、前端项目），多阶段构建可以把编译环境和运行环境分开，最终镜像只包含运行时必需的文件：</p>
+<pre><code>FROM node:20 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html</code></pre>
+<p>这样最终镜像只有几十 MB，而不是带着整个 Node.js 环境和 node_modules 的几百 MB。</p>
+
+<h2>Docker Compose</h2>
+<p>当应用需要多个服务（如 web + 数据库 + 缓存），Docker Compose 用一个 YAML 文件定义所有服务的配置和依赖关系。一个命令就能启动整个应用栈。</p>
+
+<p>除了开发环境，Compose 也适合<strong>小型生产环境</strong>和 CI/CD 流程。它带来的最大好处是：<strong>所有环境的运行方式保持一致</strong>。</p>
+
+<h2>注意事项</h2>
+<p>1. 不要在容器中存储持久化数据——使用 volume 挂载。<br>
+2. 不要以 root 用户运行容器内的应用。<br>
+3. 不要使用 latest 标签——用明确的版本号。<br>
+4. 每个容器只运行一个进程。</p>""",
+            "tags": "Docker,DevOps,容器化",
+            "author": "陈飞扬",
+            "likes_count": 61,
+        },
+        {
+            "title": "Git 工作流的艺术",
+            "summary": "从基本的 add/commit/push 到分支管理、合并策略和团队协作实践，建立高效的 Git 使用习惯。",
+            "content": """<p>Git 是每个开发者的必备工具，但大多数人只停留在 add、commit、push 三个命令上。掌握 Git 的高级用法，不仅能提升个人效率，更是<strong>团队协作的基础</strong>。</p>
+
+<h2>写好提交信息</h2>
+<p>一个好的提交信息应该回答：<strong>为什么要做这个改动？</strong>——而不是"改了什么"（代码 diff 已经说明了）。</p>
+
+<p>推荐使用约定式提交格式：</p>
+<pre><code>feat: 添加用户登录功能
+fix: 修复分页器越界问题
+refactor: 提取认证中间件
+docs: 更新 API 文档</code></pre>
+<p>提交信息的第一行控制在 50 字以内，如果需要更多说明，空一行后写详细描述。</p>
+
+<h2>分支策略</h2>
+<p>个人项目可以简单地在一个分支上开发。但团队协作需要更清晰的分支模型：</p>
+<p><strong>main/master</strong>：生产环境代码，只接受经过审查的合并。<br>
+<strong>develop</strong>：开发主分支，所有功能分支从这里切出。<br>
+<strong>feature/xxx</strong>：每个功能一个分支，完成后合并回 develop。<br>
+<strong>hotfix/xxx</strong>：紧急修复，从 main 切出，修复后同时合并回 main 和 develop。</p>
+
+<p>这其实是 Git Flow 的简化版。对于大多数团队来说，GitHub Flow（main + feature branches）已经足够。</p>
+
+<h2>合并 vs 变基</h2>
+<p><strong>merge</strong> 保留完整的历史记录，但会产生额外的合并提交。适合多人协作的公共分支。</p>
+<p><strong>rebase</strong> 创建线性的历史记录，更加整洁。适合整理自己尚未推送的本地提交。</p>
+
+<p>黄金法则：<strong>永远不要 rebase 已经推送到远程的公共分支。</strong>这会导致协作者的本地历史与远程不一致。</p>
+
+<h2>实用技巧</h2>
+<p><strong>交互式 rebase</strong>（git rebase -i）：用来整理提交历史——合并、拆分、重新排序提交。在提 PR 之前清理一下提交记录是很好的习惯。</p>
+<p><strong>cherry-pick</strong>：只把某一个提交应用到当前分支，而不合并整个分支。适合需要从其他分支"借"一个特定修复的场景。</p>
+<p><strong>stash</strong>：临时保存未完成的工作，切换去处理紧急任务，然后再用 stash pop 恢复。</p>
+<p><strong>reflog</strong>：Git 的"后悔药"——即使你删了分支或 reset 了提交，只要在 30 天内都能找回。</p>
+
+<h2>团队协作习惯</h2>
+<p>1. 提交前先拉取最新代码（git pull --rebase）。<br>
+2. 每次提交的改动量适中——太大不好 review，太小浪费 CI 资源。<br>
+3. PR 描述里写清楚改了什么、为什么改、怎么测试。<br>
+4. Code Review 不只是找 bug，更是分享知识。</p>""",
+            "tags": "Git,DevOps,团队协作",
+            "author": "陈飞扬",
+            "likes_count": 89,
+        },
+    ]
+
+    for bp in blog_posts:
+        conn.execute(
+            """INSERT INTO blog_posts (title, summary, content, tags, author, likes_count)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (bp["title"], bp["summary"], bp["content"], bp["tags"], bp["author"], bp["likes_count"])
         )
 
     conn.commit()

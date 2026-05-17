@@ -61,10 +61,28 @@ def init_db():
             UNIQUE(review_id, user_token)
         );
 
+        CREATE TABLE IF NOT EXISTS blog_posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            summary TEXT NOT NULL DEFAULT '',
+            content TEXT NOT NULL DEFAULT '',
+            tags TEXT NOT NULL DEFAULT '',
+            author TEXT NOT NULL DEFAULT '陈飞扬',
+            likes_count INTEGER NOT NULL DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS admin_tokens (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            token TEXT NOT NULL UNIQUE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
         CREATE INDEX IF NOT EXISTS idx_reviews_drama_id ON reviews(drama_id);
         CREATE INDEX IF NOT EXISTS idx_reviews_created ON reviews(created_at);
         CREATE INDEX IF NOT EXISTS idx_comments_review_id ON comments(review_id);
         CREATE INDEX IF NOT EXISTS idx_likes_review_id ON likes(review_id);
+        CREATE INDEX IF NOT EXISTS idx_blog_posts_created ON blog_posts(created_at);
     """)
     conn.commit()
     conn.close()
