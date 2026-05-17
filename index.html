@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人主页</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f8f5ff;
+    --surface: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --accent: #7c3aed;
+    --accent2: #f97316;
+  }
+
+  body {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ---------- canvas 背景 ---------- */
+  canvas#bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ---------- 导航 ---------- */
+  nav {
+    position: fixed; top: 0; width: 100%;
+    z-index: 100;
+    padding: 1.2rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.8);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  nav .logo { font-size: 1.4rem; font-weight: 700; letter-spacing: -1px; color: var(--accent); }
+  nav ul { display: flex; gap: 2.5rem; list-style: none; }
+  nav a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.9rem; font-weight: 500; letter-spacing: 0.5px;
+    transition: color 0.3s; position: relative;
+  }
+  nav a:hover { color: var(--text); }
+  nav a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px; background: var(--accent);
+    transition: width 0.3s;
+  }
+  nav a:hover::after { width: 100%; }
+
+  /* ---------- 通用 ---------- */
+  section {
+    position: relative; z-index: 1;
+    max-width: 900px; margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding-top: 4rem;
+  }
+  .hero .greeting { color: var(--accent); font-size: 1rem; font-weight: 500; letter-spacing: 2px; margin-bottom: 1rem; }
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 700; line-height: 1.05; letter-spacing: -3px;
+    margin-bottom: 1rem;
+  }
+  .hero h1 .gradient {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero .subtitle {
+    font-size: 1.15rem; color: var(--muted); font-weight: 300;
+    max-width: 500px; line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+  .hero .btns { display: flex; gap: 1rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 2rem; border-radius: 50px;
+    font-family: inherit; font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.3s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border: none; }
+  .btn-primary:hover { background: #6d28d9; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,58,237,0.3); }
+  .btn-ghost { background: transparent; color: var(--text); border: 1px solid rgba(0,0,0,0.12); }
+  .btn-ghost:hover { border-color: var(--accent); background: rgba(124,58,237,0.04); }
+
+  /* ---------- 区块标题 ---------- */
+  .section-label { color: var(--accent); font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 0.8rem; }
+  .section-title { font-size: 2rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 2.5rem; }
+
+  /* ---------- About ---------- */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .about-text { font-size: 1rem; line-height: 1.8; color: var(--muted); }
+  .about-text strong { color: var(--text); }
+
+  .stat-card {
+    background: var(--surface); border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 16px; padding: 2rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  }
+  .stat-item .num {
+    font-size: 2.2rem; font-weight: 700; letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-item .label { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+  /* ---------- Skills ---------- */
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.8rem;
+  }
+  .skill-tag {
+    background: var(--surface); border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px; padding: 1rem 1.2rem;
+    text-align: center; font-size: 0.85rem; font-weight: 500;
+    transition: all 0.3s; cursor: default;
+  }
+  .skill-tag:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+  /* ---------- Projects ---------- */
+  .project-card {
+    background: var(--surface); border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 20px; padding: 2.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s;
+    display: flex; flex-direction: column; gap: 0.8rem;
+  }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124,58,237,0.12); }
+  .project-card .year { font-size: 0.75rem; color: var(--accent); letter-spacing: 1px; }
+  .project-card h3 { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.5px; }
+  .project-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+  .project-card .tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .project-card .tag {
+    font-size: 0.7rem; padding: 0.3rem 0.8rem;
+    border-radius: 50px; background: rgba(124,58,237,0.06);
+    color: var(--accent); letter-spacing: 0.5px;
+  }
+
+  /* ---------- Contact ---------- */
+  .contact-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .contact-link {
+    display: flex; align-items: center; gap: 0.7rem;
+    color: var(--muted); text-decoration: none;
+    font-size: 1rem; transition: color 0.3s;
+  }
+  .contact-link:hover { color: var(--accent); }
+  .contact-link .icon { font-size: 1.4rem; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    text-align: center; padding: 3rem 2rem;
+    color: var(--muted); font-size: 0.8rem;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    position: relative; z-index: 1;
+  }
+
+  /* ---------- 响应式 ---------- */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    nav ul { gap: 1.2rem; }
+    section { padding: 4rem 1.5rem; }
+    .hero h1 { font-size: 2.5rem; letter-spacing: -1px; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .skills-grid { grid-template-columns: repeat(3, 1fr); }
+    .contact-links { flex-direction: column; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<nav>
+  <span class="logo">&lt;dev /&gt;</span>
+  <ul>
+    <li><a href="blog.html">技术博客</a></li>
+    <li><a href="kdrama.html">韩剧影评</a></li>
+    <li><a href="#about">关于</a></li>
+    <li><a href="#skills">技能</a></li>
+    <li><a href="#projects">项目</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <p class="greeting">你好，我是陈飞扬</p>
+  <h1>创造<span class="gradient">美好</span><br>数字体验</h1>
+  <p class="subtitle">
+    热爱开源的全栈开发者，专注构建高性能、优雅的软件系统。喜欢探索技术边界，把想法变成现实。
+  </p>
+  <div class="btns">
+    <a href="#projects" class="btn btn-primary">查看作品 →</a>
+    <a href="#contact" class="btn btn-ghost">联系我</a>
+  </div>
+</section>
+
+<section id="about">
+  <p class="section-label">ABOUT</p>
+  <h2 class="section-title">关于我</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        我是一名<strong>全栈工程师</strong>，目前在探索 AI 与自动化方向。<br><br>
+        从写下第一行代码至今已走过 5 年，始终保持着对技术最纯粹的好奇心。我相信<strong>好的代码应该是艺术品</strong>——简洁、高效、经得起时间考验。<br><br>
+        工作之余，喜欢摄影和旅行，用镜头记录世界的另一面。
+      </p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-item">
+        <div class="num">5+</div>
+        <div class="label">年开发经验</div>
+      </div>
+      <div class="stat-item">
+        <div class="num">30+</div>
+        <div class="label">完成项目</div>
+      </div>
+      <div class="stat-item">
+        <div class="num">15+</div>
+        <div class="label">开源贡献</div>
+      </div>
+      <div class="stat-item">
+        <div class="num">2k+</div>
+        <div class="label">GitHub Stars</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <p class="section-label">SKILLS</p>
+  <h2 class="section-title">技术栈</h2>
+  <div class="skills-grid">
+    <div class="skill-tag">Python</div>
+    <div class="skill-tag">TypeScript</div>
+    <div class="skill-tag">React</div>
+    <div class="skill-tag">Vue</div>
+    <div class="skill-tag">Node.js</div>
+    <div class="skill-tag">FastAPI</div>
+    <div class="skill-tag">Docker</div>
+    <div class="skill-tag">Kubernetes</div>
+    <div class="skill-tag">PostgreSQL</div>
+    <div class="skill-tag">Redis</div>
+    <div class="skill-tag">PyTorch</div>
+    <div class="skill-tag">Rust</div>
+  </div>
+</section>
+
+<section id="projects">
+  <p class="section-label">PROJECTS</p>
+  <h2 class="section-title">精选项目</h2>
+
+  <div class="project-card">
+    <span class="year">2024</span>
+    <h3>智能运维平台</h3>
+    <p>基于 AI 的自动化运维系统，支持异常检测、根因分析与自动修复，将故障响应时间从小时级缩短至分钟级。</p>
+    <div class="tags">
+      <span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">PyTorch</span><span class="tag">K8s</span>
+    </div>
+  </div>
+
+  <div class="project-card">
+    <span class="year">2023</span>
+    <h3>实时数据引擎</h3>
+    <p>高性能流处理框架，支持百万级 QPS 实时计算，内置 SQL 查询引擎和可视化编排界面。</p>
+    <div class="tags">
+      <span class="tag">Rust</span><span class="tag">ClickHouse</span><span class="tag">React</span>
+    </div>
+  </div>
+
+  <div class="project-card">
+    <span class="year">2023</span>
+    <h3>开源组件库 Stellar UI</h3>
+    <p>面向 React 的现代化组件库，70+ 组件，支持主题定制与无障碍访问，GitHub 2k+ stars。</p>
+    <div class="tags">
+      <span class="tag">TypeScript</span><span class="tag">React</span><span class="tag">Rollup</span>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <p class="section-label">CONTACT</p>
+  <h2 class="section-title">联系我</h2>
+  <div class="contact-links">
+    <a href="mailto:hello@example.com" class="contact-link">
+      <span class="icon">✉</span> hello@example.com
+    </a>
+    <a href="https://github.com" class="contact-link">
+      <span class="icon">⌘</span> GitHub
+    </a>
+    <a href="#" class="contact-link">
+      <span class="icon">💬</span> 微信: dev_xxx
+    </a>
+  </div>
+</section>
+
+<footer>
+  &copy; 2024 · Built with care · 保留所有权利
+</footer>
+
+<script>
+// ---------- 粒子背景 ----------
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+
+let w, h, particles;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', () => { resize(); initParticles(); });
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x = Math.random() * w;
+    this.y = Math.random() * h;
+    this.vx = (Math.random() - 0.5) * 0.6;
+    this.vy = (Math.random() - 0.5) * 0.6;
+    this.r = Math.random() * 1.5 + 0.5;
+    this.alpha = Math.random() * 0.5 + 0.1;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(124,58,237,${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+function initParticles() {
+  const count = Math.floor((w * h) / 12000);
+  particles = Array.from({ length: count }, () => new Particle());
+}
+
+function drawLines() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 130) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(124,58,237,${0.06 * (1 - dist / 130)})`;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, w, h);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawLines();
+  requestAnimationFrame(animate);
+}
+
+initParticles();
+animate();
+
+// ---------- 平滑滚动 ----------
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>

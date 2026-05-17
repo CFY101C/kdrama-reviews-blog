@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>韩剧影评 - 深夜放映室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #fef9f4;
+    --bg-warm: #fdf5ed;
+    --surface: #ffffff;
+    --text: #3d2c2c;
+    --muted: #8b7b7b;
+    --accent: #e8817f;
+    --accent-soft: #f5d5d3;
+    --accent-dark: #d4706e;
+    --rose: #d4837b;
+    --gold: #c9964c;
+    --border: #f0e4df;
+    --shadow: 0 2px 20px rgba(120, 80, 60, 0.06);
+    --shadow-hover: 0 8px 40px rgba(120, 80, 60, 0.12);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --font-serif: 'Noto Serif SC', 'Noto Serif KR', 'STSong', 'SimSun', 'Songti SC', serif;
+    --duration: 0.3s;
+  }
+
+  body {
+    font-family: var(--font-serif);
+    background: var(--bg);
+    color: var(--text);
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(232, 129, 127, 0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 60%, rgba(212, 131, 123, 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 90%, rgba(201, 150, 76, 0.03) 0%, transparent 40%);
+    min-height: 100vh;
+  }
+
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 1rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    backdrop-filter: blur(16px);
+    background: rgba(254, 249, 244, 0.85);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .logo {
+    font-size: 1.3rem; font-weight: 700; color: var(--accent);
+    letter-spacing: 1px;
+  }
+  nav .logo a { color: inherit; text-decoration: none; }
+  nav ul { display: flex; gap: 2.5rem; list-style: none; }
+  nav a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.9rem; font-weight: 500;
+    transition: color var(--duration); position: relative;
+  }
+  nav a:hover, nav a.active { color: var(--accent); }
+  nav a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 2px; background: var(--accent);
+    border-radius: 1px; transition: width var(--duration);
+  }
+  nav a:hover::after, nav a.active::after { width: 100%; }
+
+  main {
+    position: relative; z-index: 1;
+    max-width: 1060px; margin: 0 auto;
+    padding: 6rem 2rem 4rem;
+    min-height: 100vh;
+  }
+
+  .hero {
+    text-align: center; padding: 3rem 1rem 2.5rem;
+    position: relative;
+  }
+  .hero .label {
+    font-size: 0.8rem; letter-spacing: 4px;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 0.8rem; display: block;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 700; letter-spacing: 2px;
+    line-height: 1.4; margin-bottom: 0.8rem;
+  }
+  .hero h1 .accent {
+    color: var(--accent);
+    position: relative;
+  }
+  .hero h1 .accent::after {
+    content: ''; position: absolute; bottom: 4px; left: 0;
+    width: 100%; height: 8px;
+    background: var(--accent-soft); border-radius: 4px;
+    z-index: -1; opacity: 0.5;
+  }
+  .hero .subtitle {
+    color: var(--muted); font-size: 1.05rem;
+    font-weight: 400; letter-spacing: 1px;
+    max-width: 500px; margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 0.7rem;
+    align-items: center; justify-content: center;
+    margin: 2rem 0 2.5rem;
+  }
+  .filter-bar .search-wrap {
+    display: flex; align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50px; padding: 0.5rem 1.2rem;
+    gap: 0.5rem; transition: border-color var(--duration);
+  }
+  .filter-bar .search-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(232, 129, 127, 0.1);
+  }
+  .filter-bar .search-wrap input {
+    border: none; outline: none; background: transparent;
+    font-family: var(--font-serif); font-size: 0.9rem;
+    color: var(--text); width: 180px;
+  }
+  .filter-bar .search-wrap input::placeholder { color: #c4b8b8; }
+  .filter-bar .search-icon { color: var(--muted); font-size: 0.9rem; }
+
+  .genre-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+  .genre-pill {
+    padding: 0.4rem 1.1rem; border-radius: 50px;
+    border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted);
+    font-family: var(--font-serif); font-size: 0.85rem;
+    cursor: pointer; transition: all var(--duration);
+    white-space: nowrap;
+  }
+  .genre-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .genre-pill.active {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+
+  .sort-select {
+    padding: 0.4rem 1rem; border-radius: 50px;
+    border: 1px solid var(--border);
+    background: var(--surface); color: var(--text);
+    font-family: var(--font-serif); font-size: 0.85rem;
+    cursor: pointer; outline: none;
+  }
+  .sort-select:focus { border-color: var(--accent); }
+
+  .review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .review-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all var(--duration);
+    position: relative; overflow: hidden;
+    display: flex; gap: 1.2rem;
+  }
+  .review-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent-soft);
+  }
+  .review-card .card-poster {
+    width: 90px; height: 130px; border-radius: var(--radius-sm);
+    object-fit: cover; flex-shrink: 0;
+    background: var(--bg-warm);
+  }
+  .review-card .card-body { flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
+  .review-card .card-drama {
+    font-size: 0.75rem; color: var(--accent);
+    letter-spacing: 1px; font-weight: 500;
+  }
+  .review-card .card-drama small { color: var(--muted); font-weight: 300; }
+  .review-card h2 {
+    font-size: 1.1rem; font-weight: 600;
+    line-height: 1.4; letter-spacing: 0.5px;
+  }
+  .review-card .card-summary {
+    font-size: 0.85rem; color: var(--muted);
+    line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .review-card .card-meta {
+    display: flex; align-items: center; gap: 0.7rem;
+    margin-top: auto; font-size: 0.8rem; color: var(--muted);
+  }
+  .review-card .stars { color: var(--gold); letter-spacing: 2px; }
+  .review-card .likes-count { display: flex; align-items: center; gap: 0.2rem; }
+
+  .pagination {
+    display: flex; justify-content: center; align-items: center;
+    gap: 0.4rem; margin-top: 2.5rem;
+  }
+  .pagination button {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-family: var(--font-serif); font-size: 0.85rem;
+    color: var(--text); cursor: pointer;
+    transition: all var(--duration);
+  }
+  .pagination button:hover:not(:disabled) {
+    border-color: var(--accent); color: var(--accent);
+  }
+  .pagination button.active {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .pagination button:disabled { opacity: 0.3; cursor: default; }
+
+  #detail-view { display: none; }
+
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    color: var(--accent); font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; margin-bottom: 2rem;
+    background: none; border: 1px solid var(--border);
+    padding: 0.5rem 1.2rem; border-radius: 50px;
+    font-family: var(--font-serif);
+    transition: all var(--duration);
+  }
+  .back-btn:hover { border-color: var(--accent); background: rgba(232,129,127,0.04); }
+
+  .detail-layout { display: grid; grid-template-columns: 240px 1fr; gap: 2rem; }
+
+  .detail-sidebar {
+    position: sticky; top: 6rem; align-self: start;
+  }
+  .detail-sidebar .drama-poster {
+    width: 100%; border-radius: var(--radius);
+    box-shadow: var(--shadow); margin-bottom: 1.2rem;
+    aspect-ratio: 2/3; object-fit: cover;
+    background: var(--bg-warm);
+  }
+  .drama-info-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.2rem;
+  }
+  .drama-info-card .info-row {
+    display: flex; justify-content: space-between;
+    padding: 0.5rem 0; font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .drama-info-card .info-row:last-child { border-bottom: none; }
+  .drama-info-card .info-label { color: var(--muted); }
+  .drama-info-card .info-value { color: var(--text); font-weight: 500; text-align: right; }
+
+  .detail-main .article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .detail-main .article-meta {
+    display: flex; gap: 1rem; align-items: center;
+    margin-bottom: 0.8rem; font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .detail-main .article-meta .drama-name { color: var(--accent); font-weight: 500; }
+  .detail-main .article-meta .date { font-size: 0.8rem; }
+  .detail-main .article-meta .stars { color: var(--gold); }
+  .detail-main h1 {
+    font-size: 2rem; font-weight: 700; letter-spacing: 1px;
+    line-height: 1.3;
+  }
+  .detail-main .article-tags {
+    display: flex; gap: 0.5rem; margin-top: 1rem;
+  }
+  .detail-main .article-tag {
+    padding: 0.25rem 0.8rem; border-radius: 50px;
+    background: var(--accent-soft); color: var(--accent-dark);
+    font-size: 0.75rem; font-weight: 500;
+  }
+
+  .article-content {
+    font-size: 1.05rem; line-height: 2; color: #4a3a3a;
+  }
+  .article-content h2 {
+    font-size: 1.25rem; font-weight: 700; margin: 2.5rem 0 1rem;
+    color: var(--text); padding-left: 1rem;
+    border-left: 3px solid var(--accent);
+  }
+  .article-content h3 {
+    font-size: 1rem; font-weight: 600; margin: 1.8rem 0 0.6rem;
+    color: var(--accent-dark);
+  }
+  .article-content p { margin-bottom: 1.2rem; }
+  .article-content strong { color: var(--text); }
+
+  .like-section {
+    display: flex; align-items: center; gap: 0.8rem;
+    margin: 2.5rem 0; padding: 1.2rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .like-btn {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.6rem 1.4rem; border-radius: 50px;
+    border: 1px solid var(--accent-soft);
+    background: var(--surface); color: var(--accent);
+    font-family: var(--font-serif); font-size: 0.9rem;
+    cursor: pointer; transition: all var(--duration);
+  }
+  .like-btn:hover { background: var(--accent-soft); }
+  .like-btn.liked {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .like-btn .heart { transition: transform 0.2s; display: inline-block; }
+  .like-btn.liked .heart { animation: heartPop 0.4s ease; }
+
+  @keyframes heartPop {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.3); }
+    60% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+  }
+
+  .comments-section { margin-top: 2rem; }
+  .comments-section h2 {
+    font-size: 1.2rem; font-weight: 600;
+    margin-bottom: 1.5rem; letter-spacing: 1px;
+  }
+  .comment-form {
+    display: flex; gap: 0.8rem; margin-bottom: 2rem;
+  }
+  .comment-form input {
+    flex: 1; padding: 0.7rem 1.2rem;
+    border: 1px solid var(--border); border-radius: 50px;
+    font-family: var(--font-serif); font-size: 0.9rem;
+    outline: none; color: var(--text);
+    transition: border-color var(--duration);
+  }
+  .comment-form input:focus { border-color: var(--accent); }
+  .comment-form button {
+    padding: 0.7rem 1.5rem; border-radius: 50px;
+    border: none; background: var(--accent); color: #fff;
+    font-family: var(--font-serif); font-size: 0.9rem;
+    cursor: pointer; transition: background var(--duration);
+    white-space: nowrap;
+  }
+  .comment-form button:hover { background: var(--accent-dark); }
+
+  .comment-list { display: flex; flex-direction: column; gap: 1rem; }
+  .comment-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 1rem 1.2rem;
+  }
+  .comment-item .comment-header {
+    display: flex; justify-content: space-between;
+    margin-bottom: 0.5rem; font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .comment-item .comment-author { font-weight: 600; color: var(--accent); }
+  .comment-item .comment-content {
+    font-size: 0.95rem; line-height: 1.7; color: var(--text);
+  }
+
+  .empty-state {
+    text-align: center; padding: 4rem 2rem;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+  .loader {
+    text-align: center; padding: 3rem; color: var(--muted);
+  }
+
+  footer {
+    text-align: center; padding: 2.5rem 2rem;
+    color: var(--muted); font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    letter-spacing: 2px; position: relative; z-index: 1;
+  }
+
+  @media (max-width: 900px) {
+    .detail-layout { grid-template-columns: 1fr; }
+    .detail-sidebar { position: static; max-width: 200px; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 0.8rem 1.2rem; }
+    nav ul { gap: 1rem; }
+    nav a { font-size: 0.8rem; }
+    main { padding: 5rem 1rem 3rem; }
+    .hero h1 { font-size: 1.8rem; }
+    .hero .subtitle { font-size: 0.9rem; }
+    .review-grid { grid-template-columns: 1fr; }
+    .review-card { flex-direction: column; }
+    .review-card .card-poster {
+      width: 100%; height: 200px; aspect-ratio: auto;
+    }
+    .filter-bar { flex-direction: column; }
+    .filter-bar .search-wrap input { width: 100%; }
+    .detail-main h1 { font-size: 1.4rem; }
+    .comment-form { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo"><a href="index.html">深夜放映室</a></span>
+  <ul>
+    <li><a href="index.html">首页</a></li>
+    <li><a href="blog.html">技术博客</a></li>
+    <li><a href="kdrama.html" class="active">韩剧影评</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div id="list-view">
+    <div class="hero">
+      <span class="label">K-DRAMA REVIEWS</span>
+      <h1>在深夜<span class="accent">光影</span>中<br>遇见另一种人生</h1>
+      <p class="subtitle">
+        一部好剧，一杯热茶，一个安静的夜晚。这里记录着每一部触动心灵的韩剧和它们背后的故事。
+      </p>
+    </div>
+
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <span class="search-icon">&#x1F50E;</span>
+        <input type="text" id="search-input" placeholder="搜索剧名或影评..." oninput="onSearch()">
+      </div>
+      <div class="genre-pills" id="genre-pills">
+        <span class="genre-pill active" data-genre="" onclick="selectGenre('', this)">全部</span>
+      </div>
+      <select class="sort-select" id="sort-select" onchange="onSortChange()">
+        <option value="latest">最新发布</option>
+        <option value="popular">最多点赞</option>
+        <option value="rating">评分最高</option>
+      </select>
+    </div>
+
+    <div class="review-grid" id="review-grid"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <div id="detail-view">
+    <button class="back-btn" onclick="showList()">&#x2190; 返回影评列表</button>
+    <div class="detail-layout">
+      <aside class="detail-sidebar">
+        <img class="drama-poster" id="detail-poster" src="" alt="">
+        <div class="drama-info-card" id="drama-info"></div>
+      </aside>
+      <div class="detail-main">
+        <div class="article-header">
+          <div class="article-meta">
+            <span class="drama-name" id="detail-drama"></span>
+            <span class="date" id="detail-date"></span>
+            <span class="stars" id="detail-stars"></span>
+          </div>
+          <h1 id="detail-title"></h1>
+          <div class="article-tags" id="detail-tags"></div>
+        </div>
+        <div class="article-content" id="detail-content"></div>
+
+        <div class="like-section">
+          <button class="like-btn" id="like-btn" onclick="toggleLike()">
+            <span class="heart">&#x2764;</span>
+            <span id="like-count">0</span> 赞
+          </button>
+          <span style="color: var(--muted); font-size: 0.85rem;">喜欢这篇影评就点个赞吧</span>
+        </div>
+
+        <div class="comments-section">
+          <h2>评论 (<span id="comment-count">0</span>)</h2>
+          <div class="comment-form">
+            <input type="text" id="comment-input" placeholder="写下你的想法..." maxlength="500">
+            <button onclick="submitComment()">发表评论</button>
+          </div>
+          <div class="comment-list" id="comment-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>&copy; 2024 深夜放映室 &middot; 用文字记录每一部好剧</footer>
+
+<script>
+const API = '/api';
+let currentPage = 1;
+let currentGenre = '';
+let currentSearch = '';
+let currentSort = 'latest';
+let currentReviewId = null;
+let userToken = localStorage.getItem('kdrama_user_token') || '';
+
+if (!userToken) {
+  userToken = 'u_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+  localStorage.setItem('kdrama_user_token', userToken);
+}
+
+function renderStars(rating) {
+  const full = Math.floor(rating);
+  const half = rating - full >= 0.5;
+  let s = '';
+  for (let i = 0; i < full; i++) s += '★';
+  if (half) s += '½';
+  const empty = 5 - full - (half ? 1 : 0);
+  for (let i = 0; i < empty; i++) s += '☆';
+  return s;
+}
+
+async function loadGenres() {
+  const resp = await fetch(API + '/genres');
+  const data = await resp.json();
+  const container = document.getElementById('genre-pills');
+  data.genres.forEach(function(g) {
+    var span = document.createElement('span');
+    span.className = 'genre-pill';
+    span.dataset.genre = g;
+    span.textContent = g;
+    span.onclick = function() { selectGenre(g, span); };
+    container.appendChild(span);
+  });
+}
+
+function selectGenre(genre, el) {
+  currentGenre = genre;
+  currentPage = 1;
+  document.querySelectorAll('.genre-pill').forEach(function(p) { p.classList.remove('active'); });
+  el.classList.add('active');
+  loadReviews();
+}
+
+var searchTimer;
+function onSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(function() {
+    currentSearch = document.getElementById('search-input').value.trim();
+    currentPage = 1;
+    loadReviews();
+  }, 300);
+}
+
+function onSortChange() {
+  currentSort = document.getElementById('sort-select').value;
+  currentPage = 1;
+  loadReviews();
+}
+
+async function loadReviews() {
+  var grid = document.getElementById('review-grid');
+  grid.innerHTML = '<div class="loader">加载中...</div>';
+
+  var params = new URLSearchParams({
+    page: currentPage, per_page: 6,
+    genre: currentGenre, search: currentSearch, sort: currentSort
+  });
+  var resp = await fetch(API + '/reviews?' + params);
+  var data = await resp.json();
+
+  if (data.reviews.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">&#x1F3AC;</div><p>没有找到相关影评</p></div>';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  grid.innerHTML = data.reviews.map(function(r) {
+    return '<div class="review-card" onclick="showDetail(' + r.id + ')">' +
+      '<img class="card-poster" src="' + (r.poster_url || '') + '" alt="' + r.drama_title + '" loading="lazy"' +
+      ' onerror="this.style.display=\'none\'">' +
+      '<div class="card-body">' +
+        '<div class="card-drama">' + r.drama_title + ' <small>' + (r.drama_title_ko || '') + '</small></div>' +
+        '<h2>' + r.title + '</h2>' +
+        '<p class="card-summary">' + r.summary + '</p>' +
+        '<div class="card-meta">' +
+          '<span class="stars">' + renderStars(r.rating) + '</span>' +
+          '<span>' + r.author + '</span>' +
+          '<span class="likes-count">&#x2764; ' + r.likes_count + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  renderPagination(data.total_pages);
+}
+
+function renderPagination(totalPages) {
+  var container = document.getElementById('pagination');
+  if (totalPages <= 1) { container.innerHTML = ''; return; }
+
+  var html = '';
+  html += '<button ' + (currentPage === 1 ? 'disabled' : '') + ' onclick="goPage(' + (currentPage - 1) + ')">&#x2039;</button>';
+  for (var i = 1; i <= totalPages; i++) {
+    html += '<button class="' + (i === currentPage ? 'active' : '') + '" onclick="goPage(' + i + ')">' + i + '</button>';
+  }
+  html += '<button ' + (currentPage === totalPages ? 'disabled' : '') + ' onclick="goPage(' + (currentPage + 1) + ')">&#x203A;</button>';
+  container.innerHTML = html;
+}
+
+function goPage(page) {
+  currentPage = page;
+  loadReviews();
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+}
+
+async function showDetail(id) {
+  currentReviewId = id;
+  document.getElementById('list-view').style.display = 'none';
+  document.getElementById('detail-view').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  var resp = await fetch(API + '/reviews/' + id);
+  var data = await resp.json();
+  var r = data.review;
+
+  document.getElementById('detail-poster').src = r.poster_url || '';
+  document.getElementById('detail-drama').textContent = r.drama_title + (r.drama_title_ko ? ' ' + r.drama_title_ko : '');
+  document.getElementById('detail-date').textContent = r.created_at ? r.created_at.slice(0, 10) : '';
+  document.getElementById('detail-stars').textContent = renderStars(r.rating) + ' ' + r.rating;
+  document.getElementById('detail-title').textContent = r.title;
+  document.getElementById('detail-tags').innerHTML = r.genre
+    ? r.genre.split(',').map(function(g) { return '<span class="article-tag">' + g.trim() + '</span>'; }).join('')
+    : '';
+  document.getElementById('detail-content').innerHTML = r.content;
+
+  document.getElementById('drama-info').innerHTML =
+    '<div class="info-row"><span class="info-label">剧名</span><span class="info-value">' + r.drama_title + '</span></div>' +
+    '<div class="info-row"><span class="info-label">年份</span><span class="info-value">' + (r.year || '-') + '</span></div>' +
+    '<div class="info-row"><span class="info-label">集数</span><span class="info-value">' + (r.episodes || '-') + ' 集</span></div>' +
+    '<div class="info-row"><span class="info-label">主演</span><span class="info-value">' + (r.cast || '-') + '</span></div>' +
+    '<div class="info-row"><span class="info-label">导演</span><span class="info-value">' + (r.director || '-') + '</span></div>' +
+    '<div class="info-row"><span class="info-label">编剧</span><span class="info-value">' + (r.writer || '-') + '</span></div>' +
+    '<div class="info-row"><span class="info-label">类型</span><span class="info-value">' + (r.genre || '-') + '</span></div>' +
+    '<div class="info-row"><span class="info-label">评分</span><span class="info-value">' + renderStars(r.rating) + ' ' + r.rating + '</span></div>';
+
+  document.getElementById('like-count').textContent = r.likes_count;
+  document.getElementById('like-btn').classList.remove('liked');
+
+  await loadComments();
+}
+
+function showList() {
+  document.getElementById('detail-view').style.display = 'none';
+  document.getElementById('list-view').style.display = 'block';
+  currentReviewId = null;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function toggleLike() {
+  if (!currentReviewId) return;
+  var resp = await fetch(API + '/reviews/' + currentReviewId + '/like', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_token: userToken })
+  });
+  var data = await resp.json();
+  document.getElementById('like-count').textContent = data.likes_count;
+  var btn = document.getElementById('like-btn');
+  if (data.liked) {
+    btn.classList.add('liked');
+  } else {
+    btn.classList.remove('liked');
+  }
+}
+
+async function loadComments() {
+  if (!currentReviewId) return;
+  var resp = await fetch(API + '/reviews/' + currentReviewId + '/comments');
+  var data = await resp.json();
+  document.getElementById('comment-count').textContent = data.comments.length;
+  var list = document.getElementById('comment-list');
+  if (data.comments.length === 0) {
+    list.innerHTML = '<p style="color: var(--muted); font-size: 0.9rem;">还没有评论，来写第一条吧~</p>';
+    return;
+  }
+  list.innerHTML = data.comments.map(function(c) {
+    return '<div class="comment-item">' +
+      '<div class="comment-header">' +
+        '<span class="comment-author">' + c.author + '</span>' +
+        '<span>' + (c.created_at ? c.created_at.slice(0, 10) : '') + '</span>' +
+      '</div>' +
+      '<div class="comment-content">' + c.content + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+async function submitComment() {
+  if (!currentReviewId) return;
+  var input = document.getElementById('comment-input');
+  var content = input.value.trim();
+  if (!content) return;
+
+  var resp = await fetch(API + '/reviews/' + currentReviewId + '/comments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ author: '影迷' + userToken.slice(2, 6), content: content })
+  });
+  if (resp.ok) {
+    input.value = '';
+    await loadComments();
+  }
+}
+
+loadGenres();
+loadReviews();
+</script>
+</body>
+</html>
