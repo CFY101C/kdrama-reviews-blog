@@ -33,12 +33,27 @@
     font-family: var(--font-serif);
     background: var(--bg);
     color: var(--text);
-    background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(232, 129, 127, 0.04) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 60%, rgba(212, 131, 123, 0.03) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 90%, rgba(201, 150, 76, 0.03) 0%, transparent 40%);
     min-height: 100vh;
     overflow-x: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 50% at 15% 15%, rgba(232,129,127,0.05) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 60% at 85% 80%, rgba(201,150,76,0.04) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='0.6' fill='%23e8817f' opacity='0.12'/%3E%3C/svg%3E") 0 0 / 40px 40px;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 200px 300px at 92% 10%, rgba(232,129,127,0.04) 0%, transparent 100%),
+      radial-gradient(ellipse 160px 160px at 8% 85%, rgba(212,131,123,0.03) 0%, transparent 100%),
+      radial-gradient(ellipse 120px 250px at 88% 55%, rgba(201,150,76,0.03) 0%, transparent 100%);
   }
 
   nav {

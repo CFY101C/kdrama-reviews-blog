@@ -33,12 +33,30 @@
     font-family: var(--font-serif);
     background: var(--bg);
     color: var(--text);
-    background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(232, 129, 127, 0.04) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 60%, rgba(212, 131, 123, 0.03) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 90%, rgba(201, 150, 76, 0.03) 0%, transparent 40%);
     min-height: 100vh;
     overflow-x: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 15% 10%, rgba(232,129,127,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 85% 70%, rgba(201,150,76,0.05) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 50% 95%, rgba(212,131,123,0.04) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%23e8817f' stop-opacity='0.08'/%3E%3Cstop offset='50%25' stop-color='%23d4837b' stop-opacity='0.05'/%3E%3Cstop offset='100%25' stop-color='%23e8817f' stop-opacity='0.07'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 224l48-21c48-22 144-64 240-53 96 10 192 74 288 85 96 11 192-32 288-64s192-53 240-53l48 1v106l-48 11c-48 10-144 32-240 21-96-11-192-53-288-64-96-10-192 11-288 32s-192 43-240 43l-48-11V224z' fill='url(%23g)'/%3E%3Cpath d='M0 288l48-16c48-16 144-48 240-37 96 10 192 64 288 69 96 6 192-37 288-58s192-32 240-37l48-6v85l-48 5c-48 6-144 16-240 11-96-6-192-27-288-37-96-11-192-11-288 5s-192 32-240 32l-48-5v-11z' fill='url(%23g)'/%3E%3C/svg%3E") 0 100% / 100% 35% no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 200' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%23d4837b' stop-opacity='0.06'/%3E%3Cstop offset='40%25' stop-color='%23e8817f' stop-opacity='0.04'/%3E%3Cstop offset='100%25' stop-color='%23d4837b' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 160l60-30c60-30 180-90 300-60s240 90 360 70c120-20 240-70 360-60 120 10 240 80 300 60l60-20v80H0z' fill='url(%23g2)'/%3E%3C/svg%3E") 0 calc(100% - 40px) / 100% 30% no-repeat;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 180px 120px at 8% 25%, rgba(232,129,127,0.04) 0%, transparent 100%),
+      radial-gradient(ellipse 140px 200px at 92% 45%, rgba(201,150,76,0.03) 0%, transparent 100%),
+      radial-gradient(ellipse 100px 160px at 25% 78%, rgba(212,131,123,0.03) 0%, transparent 100%),
+      radial-gradient(ellipse 120px 90px at 75% 15%, rgba(232,129,127,0.03) 0%, transparent 100%);
   }
 
   nav {
