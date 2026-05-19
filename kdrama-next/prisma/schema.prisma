@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String
+  password  String
+  image     String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  reviews   Review[]
+  comments  Comment[]
+  likes     Like[]
+
+  @@map("users")
+}
+
+model Drama {
+  id          Int      @id @default(autoincrement())
+  tmdbId      Int      @unique @map("tmdb_id")
+  title       String
+  titleKo     String?  @map("title_ko")
+  year        Int
+  episodes    Int      @default(16)
+  cast        String   @default("")
+  director    String   @default("")
+  writer      String   @default("")
+  genre       String   @default("")
+  posterUrl   String?  @map("poster_url")
+  backdropUrl String?  @map("backdrop_url")
+  rating      Float    @default(0)
+  synopsis    String   @default("")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  reviews     Review[]
+
+  @@map("dramas")
+}
+
+model Review {
+  id         Int       @id @default(autoincrement())
+  dramaId    Int       @map("drama_id")
+  userId     String    @map("user_id")
+  title      String
+  content    String    @default("")
+  summary    String    @default("")
+  rating     Float     @default(0)
+  likesCount Int       @default(0) @map("likes_count")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  drama      Drama     @relation(fields: [dramaId], references: [id], onDelete: Cascade)
+  author     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments   Comment[]
+  likes      Like[]
+
+  @@index([dramaId])
+  @@index([createdAt])
+  @@map("reviews")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  reviewId  Int      @map("review_id")
+  userId    String   @map("user_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId])
+  @@map("comments")
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  reviewId  Int      @map("review_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
+  @@index([reviewId])
+  @@map("likes")
+}
+
+model BlogPost {
+  id         Int      @id @default(autoincrement())
+  title      String
+  summary    String   @default("")
+  content    String   @default("")
+  tags       String   @default("")
+  author     String   @default("陈飞扬")
+  likesCount Int      @default(0) @map("likes_count")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([createdAt])
+  @@map("blog_posts")
+}

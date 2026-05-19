@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-warm-bg: #fef9f4;
+  --color-warm-surface: #ffffff;
+  --color-warm-text: #3d2c2c;
+  --color-warm-muted: #8b7b7b;
+  --color-warm-border: #f0e4df;
+  --color-coral: #e8817f;
+  --color-coral-soft: #f5d4d2;
+  --color-coral-dark: #d4706e;
+  --color-gold: #c9964c;
+  --font-serif: "Noto Serif SC", "Noto Serif KR", STSong, SimSun, Songti SC, serif;
+}
+
+body {
+  background: #fef9f4;
+  color: #3d2c2c;
+  font-family: "Noto Serif SC", "Noto Serif KR", STSong, SimSun, serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
