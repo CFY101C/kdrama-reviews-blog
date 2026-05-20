@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import ReviewForm from "@/components/review/ReviewForm";
-
-const API = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 interface EditReviewPageProps {
   params: Promise<{ tmdbId: string; reviewId: string }>;
@@ -54,13 +53,22 @@ export default async function EditReviewPage({ params }: EditReviewPageProps) {
   }
 
   try {
-    const res = await fetch(`${API}/api/reviews/${reviewId}`);
-    const data = await res.json();
+    const dbReview = await prisma.review.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        rating: true,
+        author: { select: { id: true } },
+        drama: { select: { title: true } },
+      },
+    });
 
-    if (!data.success) {
+    if (!dbReview) {
       return (
         <main className="flex-1 max-w-2xl mx-auto px-4 py-16 text-center">
-          <h1 className="text-xl text-warm-muted">{data.error}</h1>
+          <h1 className="text-xl text-warm-muted">影评不存在</h1>
           <Link href="/dramas" className="text-coral hover:underline mt-4 inline-block">
             ← 返回浏览
           </Link>
@@ -68,7 +76,7 @@ export default async function EditReviewPage({ params }: EditReviewPageProps) {
       );
     }
 
-    const review: ReviewData = data.data.review;
+    const review: ReviewData = dbReview;
     if (review.author.id !== session.id) {
       return (
         <main className="flex-1 max-w-2xl mx-auto px-4 py-16 text-center">

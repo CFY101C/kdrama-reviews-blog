@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import {
+  searchMulti,
   getTrendingDramas,
   getDramasByGenre,
   getDramaGenres,
   type TmdbTvShow,
   type TmdbMultiResult,
 } from "@/lib/tmdb";
+import { prisma } from "@/lib/prisma";
 import DramaCard from "@/components/drama/DramaCard";
 import PersonCard from "@/components/drama/PersonCard";
 import SearchBar from "@/components/drama/SearchBar";
@@ -69,25 +71,92 @@ async function DramaGrid({
   let error: string | null = null;
 
   try {
-    const apiBase = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-    const params = new URLSearchParams();
-    if (q) params.set("q", q);
-    if (genre) params.set("genre", genre);
-    if (page > 1) params.set("page", String(page));
+    if (q) {
+      const result = await searchMulti(q, page);
+      totalPages = result.total_pages;
+      totalResults = result.total_results;
 
-    const res = await fetch(`${apiBase}/api/dramas?${params.toString()}`);
-    const data = await res.json();
+      const tvShows: TmdbTvShow[] = [];
+      const persons: TmdbMultiResult[] = [];
 
-    if (!data.success) {
-      error = data.error;
+      for (const item of result.results) {
+        if (item.media_type === "tv") {
+          tvShows.push(item as unknown as TmdbTvShow);
+          if (item.first_air_date && item.name) {
+            const year = new Date(item.first_air_date).getFullYear();
+            await prisma.drama.upsert({
+              where: { tmdbId: item.id },
+              update: {
+                title: item.name,
+                year,
+                posterUrl: item.poster_path,
+                backdropUrl: null,
+                synopsis: item.overview || "",
+                rating: item.vote_average ?? 0,
+              },
+              create: {
+                tmdbId: item.id,
+                title: item.name,
+                year,
+                posterUrl: item.poster_path,
+                backdropUrl: null,
+                synopsis: item.overview || "",
+                rating: item.vote_average ?? 0,
+                episodes: 16,
+              },
+            });
+          }
+        } else if (
+          item.media_type === "person" &&
+          item.known_for_department === "Acting"
+        ) {
+          persons.push(item);
+        }
+      }
+
+      shows = tvShows;
+      people = persons;
     } else {
-      shows = data.data.shows as TmdbTvShow[];
-      people = data.data.people as TmdbMultiResult[];
-      totalPages = data.meta?.totalPages || 0;
-      totalResults = data.meta?.totalResults || 0;
+      let result;
+      if (genre) {
+        result = await getDramasByGenre(parseInt(genre, 10), page);
+      } else {
+        result = await getTrendingDramas(page);
+      }
+
+      shows = result.results;
+      totalPages = result.total_pages;
+      totalResults = result.total_results;
+
+      for (const show of result.results) {
+        if (show.first_air_date && show.name) {
+          const year = new Date(show.first_air_date).getFullYear();
+          await prisma.drama.upsert({
+            where: { tmdbId: show.id },
+            update: {
+              title: show.name,
+              year,
+              posterUrl: show.poster_path,
+              backdropUrl: show.backdrop_path,
+              synopsis: show.overview || "",
+              rating: show.vote_average,
+            },
+            create: {
+              tmdbId: show.id,
+              title: show.name,
+              year,
+              posterUrl: show.poster_path,
+              backdropUrl: show.backdrop_path,
+              synopsis: show.overview || "",
+              rating: show.vote_average,
+              episodes: 16,
+            },
+          });
+        }
+      }
     }
-  } catch {
-    error = "无法加载韩剧数据，请检查网络后重试。";
+  } catch (e) {
+    error = e instanceof Error ? e.message : "无法加载韩剧数据，请检查网络后重试。";
   }
 
   if (error) {

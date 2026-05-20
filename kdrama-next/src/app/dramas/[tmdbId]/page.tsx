@@ -9,6 +9,7 @@ import {
   mapGenres,
 } from "@/lib/tmdb";
 import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import ReviewCard from "@/components/review/ReviewCard";
 
 interface ReviewItem {
@@ -249,15 +250,30 @@ async function ReviewsSection({
   session: { id: string } | null;
 }) {
   try {
-    const apiBase = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-    const res = await fetch(`${apiBase}/api/dramas/${tmdbId}/reviews`);
-    const data = await res.json();
-
-    if (!data.success) {
-      return <p className="text-sm text-warm-muted">加载影评失败</p>;
+    const drama = await prisma.drama.findUnique({ where: { tmdbId } });
+    if (!drama) {
+      return <p className="text-sm text-warm-muted">暂无影评，来写第一篇吧</p>;
     }
 
-    const reviews: ReviewItem[] = data.data.reviews;
+    const dbReviews = await prisma.review.findMany({
+      where: { dramaId: drama.id },
+      orderBy: { createdAt: "desc" },
+      include: {
+        author: { select: { id: true, name: true, image: true } },
+        _count: { select: { comments: true, likes: true } },
+      },
+    });
+
+    const reviews: ReviewItem[] = dbReviews.map((r) => ({
+      id: r.id,
+      title: r.title,
+      summary: r.summary,
+      rating: r.rating,
+      likesCount: r.likesCount,
+      createdAt: r.createdAt.toISOString(),
+      author: r.author,
+      commentCount: r._count.comments,
+    }));
 
     return (
       <section className="mt-10 border-t border-warm-border pt-8">

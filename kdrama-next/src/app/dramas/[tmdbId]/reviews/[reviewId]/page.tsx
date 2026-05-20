@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import LikeButton from "@/components/review/LikeButton";
 import CommentSection from "@/components/comment/CommentSection";
-
-const API = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 interface ReviewDetailPageProps {
   params: Promise<{ tmdbId: string; reviewId: string }>;
@@ -17,7 +16,7 @@ interface ReviewData {
   summary: string;
   rating: number;
   likesCount: number;
-  createdAt: string;
+  createdAt: Date | string;
   author: { id: string; name: string; image?: string | null };
   drama: { id: number; tmdbId: number; title: string };
   _count: { comments: number; likes: number };
@@ -27,15 +26,17 @@ export async function generateMetadata({
   params,
 }: ReviewDetailPageProps): Promise<Metadata> {
   const { reviewId } = await params;
+  const id = parseInt(reviewId, 10);
+  if (isNaN(id)) return { title: "影评 | 深夜放映室" };
   try {
-    const review = await fetch(`${API}/api/reviews/${reviewId}`).then((r) =>
-      r.json()
-    );
-    if (!review.success) return { title: "影评不存在 | 深夜放映室" };
-    const r = review.data.review as ReviewData;
+    const review = await prisma.review.findUnique({
+      where: { id },
+      select: { title: true, summary: true },
+    });
+    if (!review) return { title: "影评不存在 | 深夜放映室" };
     return {
-      title: `${r.title} | 深夜放映室`,
-      description: r.summary,
+      title: `${review.title} | 深夜放映室`,
+      description: review.summary,
     };
   } catch {
     return { title: "影评 | 深夜放映室" };
@@ -64,19 +65,26 @@ export default async function ReviewDetailPage({
   let isOwner = false;
 
   try {
-    const res = await fetch(`${API}/api/reviews/${reviewId}`);
-    const data = await res.json();
-    if (!data.success) {
-      fetchError = data.error;
+    const dbReview = await prisma.review.findUnique({
+      where: { id },
+      include: {
+        author: { select: { id: true, name: true, image: true } },
+        drama: { select: { id: true, tmdbId: true, title: true } },
+        _count: { select: { comments: true, likes: true } },
+      },
+    });
+
+    if (!dbReview) {
+      fetchError = "影评不存在";
     } else {
-      review = data.data.review as ReviewData;
+      review = dbReview;
       const session = await getSession();
       if (session && review.author.id === session.id) {
         isOwner = true;
       }
     }
-  } catch {
-    fetchError = "获取影评失败";
+  } catch (e) {
+    fetchError = e instanceof Error ? e.message : "获取影评失败";
   }
 
   if (fetchError || !review) {
@@ -94,7 +102,7 @@ export default async function ReviewDetailPage({
     return "★".repeat(Math.round(rating / 2));
   }
 
-  function formatDate(date: string) {
+  function formatDate(date: string | Date) {
     const d = new Date(date);
     return d.toLocaleDateString("zh-CN", {
       year: "numeric",
