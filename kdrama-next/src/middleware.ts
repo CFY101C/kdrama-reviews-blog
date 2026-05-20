@@ -13,7 +13,7 @@ const PROTECTED_PATTERNS = [
   /^\/api\/reviews\/\d+\/like/,
 ];
 
-async function isAuthenticated(request: NextRequest): Promise<boolean> {
+async function verifyTokenCookie(request: NextRequest): Promise<boolean> {
   const token = request.cookies.get("token")?.value;
   if (!token) return false;
 
@@ -25,8 +25,45 @@ async function isAuthenticated(request: NextRequest): Promise<boolean> {
   }
 }
 
+async function verifyAdminCookie(request: NextRequest): Promise<boolean> {
+  const token = request.cookies.get("admin_token")?.value;
+  if (!token) return false;
+
+  try {
+    const { payload } = await jwtVerify(token, SECRET);
+    return (payload as { isAdmin?: boolean }).isAdmin === true;
+  } catch {
+    return false;
+  }
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Admin page protection
+  if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
+    const isAdmin = await verifyAdminCookie(request);
+    if (!isAdmin) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // Admin API protection (except login and me)
+  if (
+    pathname.startsWith("/api/admin") &&
+    !pathname.startsWith("/api/admin/login") &&
+    !pathname.startsWith("/api/admin/me")
+  ) {
+    const isAdmin = await verifyAdminCookie(request);
+    if (!isAdmin) {
+      return Response.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+    return NextResponse.next();
+  }
 
   const needsAuth = PROTECTED_PATTERNS.some((p) => p.test(pathname));
   if (!needsAuth) return NextResponse.next();
@@ -36,7 +73,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const authenticated = await isAuthenticated(request);
+  const authenticated = await verifyTokenCookie(request);
   if (!authenticated) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
@@ -48,6 +85,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin/:path*",
+    "/api/admin/:path*",
     "/dramas/:tmdbId/reviews/:path*",
     "/api/dramas/:tmdbId/reviews/:path*",
     "/api/reviews/:reviewId/comments/:path*",

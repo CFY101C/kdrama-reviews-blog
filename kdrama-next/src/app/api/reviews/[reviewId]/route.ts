@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth, verifyAdminRequest } from "@/lib/auth";
 
 export async function GET(
   _request: NextRequest,
@@ -93,27 +93,49 @@ export async function DELETE(
   const { reviewId } = await params;
   const id = parseInt(reviewId, 10);
 
-  const user = await requireAuth(request);
-  if (!user) {
-    return Response.json(
-      { success: false, error: "请先登录" },
-      { status: 401 }
-    );
+  const isAdmin = await verifyAdminRequest(request);
+
+  if (!isAdmin) {
+    const user = await requireAuth(request);
+    if (!user) {
+      return Response.json(
+        { success: false, error: "请先登录" },
+        { status: 401 }
+      );
+    }
+
+    try {
+      const existing = await prisma.review.findUnique({ where: { id } });
+      if (!existing) {
+        return Response.json(
+          { success: false, error: "影评不存在" },
+          { status: 404 }
+        );
+      }
+
+      if (existing.userId !== user.id) {
+        return Response.json(
+          { success: false, error: "只能删除自己的影评" },
+          { status: 403 }
+        );
+      }
+
+      await prisma.review.delete({ where: { id } });
+
+      return Response.json({ success: true });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "删除影评失败";
+      return Response.json({ success: false, error: message }, { status: 500 });
+    }
   }
 
+  // Admin: can delete any review
   try {
     const existing = await prisma.review.findUnique({ where: { id } });
     if (!existing) {
       return Response.json(
         { success: false, error: "影评不存在" },
         { status: 404 }
-      );
-    }
-
-    if (existing.userId !== user.id) {
-      return Response.json(
-        { success: false, error: "只能删除自己的影评" },
-        { status: 403 }
       );
     }
 

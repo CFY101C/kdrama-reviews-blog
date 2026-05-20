@@ -97,3 +97,74 @@ export async function requireAuth(request: Request) {
 
   return getUserFromToken(token);
 }
+
+// ── Admin auth ──────────────────────────────────────────────────────
+
+const ADMIN_COOKIE_NAME = "admin_token";
+const ADMIN_COOKIE_OPTIONS = {
+  httpOnly: true,
+  sameSite: "lax" as const,
+  secure: process.env.NODE_ENV === "production",
+  path: "/",
+  maxAge: 60 * 60 * 8, // 8 hours
+};
+
+export function getAdminPassword(): string {
+  const password = process.env.ADMIN_PASSWORD;
+  if (!password || password.length < 8) {
+    throw new Error("ADMIN_PASSWORD not configured or too short (min 8 chars)");
+  }
+  return password;
+}
+
+async function signAdminToken(): Promise<string> {
+  return new SignJWT({ isAdmin: true })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("8h")
+    .sign(SECRET);
+}
+
+export async function setAdminCookie(): Promise<string> {
+  const token = await signAdminToken();
+  (await cookies()).set(ADMIN_COOKIE_NAME, token, ADMIN_COOKIE_OPTIONS);
+  return token;
+}
+
+export async function clearAdminCookie(): Promise<void> {
+  (await cookies()).set(ADMIN_COOKIE_NAME, "", { ...ADMIN_COOKIE_OPTIONS, maxAge: 0 });
+}
+
+export async function getAdminSession(): Promise<boolean> {
+  const token = (await cookies()).get(ADMIN_COOKIE_NAME)?.value;
+  if (!token) return false;
+
+  try {
+    const { payload } = await jwtVerify(token, SECRET);
+    return (payload as { isAdmin?: boolean }).isAdmin === true;
+  } catch {
+    return false;
+  }
+}
+
+export function getAdminTokenFromRequest(request: Request): string | null {
+  const cookieHeader = request.headers.get("cookie");
+  if (!cookieHeader) return null;
+
+  const match = cookieHeader.match(
+    new RegExp(`(?:^|;\\s*)${ADMIN_COOKIE_NAME}=([^;]*)`)
+  );
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+export async function verifyAdminRequest(request: Request): Promise<boolean> {
+  const token = getAdminTokenFromRequest(request);
+  if (!token) return false;
+
+  try {
+    const { payload } = await jwtVerify(token, SECRET);
+    return (payload as { isAdmin?: boolean }).isAdmin === true;
+  } catch {
+    return false;
+  }
+}
