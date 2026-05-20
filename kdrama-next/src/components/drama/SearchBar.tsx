@@ -1,18 +1,21 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SearchBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(searchParams.get("q") || "");
+  const isComposing = useRef(false);
 
   useEffect(() => {
-    setValue(searchParams.get("q") || "");
+    if (!isComposing.current) {
+      setValue(searchParams.get("q") || "");
+    }
   }, [searchParams]);
 
-  const update = useCallback(
+  const pushQuery = useCallback(
     (q: string) => {
       const params = new URLSearchParams(searchParams.toString());
       if (q) {
@@ -27,13 +30,14 @@ export default function SearchBar() {
   );
 
   useEffect(() => {
+    if (isComposing.current) return;
     const timer = setTimeout(() => {
       if (value !== (searchParams.get("q") || "")) {
-        update(value);
+        pushQuery(value);
       }
     }, 400);
     return () => clearTimeout(timer);
-  }, [value, searchParams, update]);
+  }, [value, searchParams, pushQuery]);
 
   return (
     <div className="relative">
@@ -41,6 +45,17 @@ export default function SearchBar() {
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        onCompositionStart={() => {
+          isComposing.current = true;
+        }}
+        onCompositionEnd={(e) => {
+          isComposing.current = false;
+          const v = e.data || e.currentTarget.value;
+          setValue(v);
+          if (v !== (searchParams.get("q") || "")) {
+            pushQuery(v);
+          }
+        }}
         placeholder="搜索韩剧或演员..."
         className="w-full px-4 py-3 pl-10 rounded-lg border border-warm-border bg-warm-surface text-warm-text placeholder-warm-muted focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral transition-all text-sm"
       />
